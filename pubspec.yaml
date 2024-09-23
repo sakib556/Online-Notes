@@ -12,6 +12,7 @@ dependencies:
   firebase_core: 
   firebase_auth: 
   firebase_messaging: 
+  cloud_firestore: 
   get: ^4.6.6
 
 dev_dependencies:

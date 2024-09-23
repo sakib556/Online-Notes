@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:online_notes/auth_controller.dart';
 import 'package:online_notes/global_text_field.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  AuthController authController = Get.put(AuthController());
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +49,7 @@ class SignupScreen extends StatelessWidget {
                   GlobalTextField(
                     label: "Name",
                     hint: "Enter your name",
-                    controller: TextEditingController(),
+                    controller: usernameController,
                   ),
                   SizedBox(
                     height: 10,
@@ -45,7 +57,7 @@ class SignupScreen extends StatelessWidget {
                   GlobalTextField(
                     label: "Email",
                     hint: "Enter your email",
-                    controller: TextEditingController(),
+                    controller: emailController,
                   ),
                   SizedBox(
                     height: 10,
@@ -53,7 +65,7 @@ class SignupScreen extends StatelessWidget {
                   GlobalTextField(
                     label: "Password",
                     hint: "Enter your password",
-                    controller: TextEditingController(),
+                    controller: passwordController,
                   ),
                   SizedBox(
                     height: 10,
@@ -61,14 +73,18 @@ class SignupScreen extends StatelessWidget {
                   GlobalTextField(
                     label: "Confirm Password",
                     hint: "Enter your password again",
-                    controller: TextEditingController(),
+                    controller: confirmPasswordController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        //  Navigator.pop(context);
+                        authController.signUp(
+                            email: emailController.text,
+                            password: passwordController.text,
+                            cpassword: confirmPasswordController.text,
+                            username: usernameController.text);
                       },
                       child: Text("Sign Up"))
                 ],
