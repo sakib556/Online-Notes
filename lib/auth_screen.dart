@@ -15,7 +15,7 @@ class AuthScreen extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while checking the auth status
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData && snapshot.data != null) {
           // User is logged in
           return HomeScreen();

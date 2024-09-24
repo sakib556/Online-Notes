@@ -56,7 +56,7 @@ class AuthController extends GetxController {
         );
 
         // Create a new document in Firestore
-        await firestore.collection('users').doc(userCredential.user!.uid).set({
+        await firestore.collection('users').doc(userCredential.user?.uid).set({
           'username': username,
           'email': email,
           'createdAt':
@@ -67,7 +67,9 @@ class AuthController extends GetxController {
       } else {
         showErrorDialog("Please enter valid email and password.");
       }
+      print("error in method");
     } on FirebaseAuthException catch (e) {
+      print("error in fb ");
       handleFirebaseAuthError(e);
     } finally {
       isSignupButtonLoading.value = false; // Ensure loading state is reset

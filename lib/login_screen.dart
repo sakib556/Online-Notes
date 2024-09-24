@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_notes/auth_controller.dart';
 import 'package:online_notes/global_text_field.dart';
+import 'package:online_notes/signup_screen.dart'; // Import your sign-up screen
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -44,11 +45,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
-                          // Simple email validation
                           if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                             return 'Please enter a valid email';
                           }
-                          return null; // Return null if valid
+                          return null;
                         },
                       ),
                       SizedBox(height: 10),
@@ -63,23 +63,37 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (value.length < 6) {
                             return 'Password must be at least 6 characters';
                           }
-                          return null; // Return null if valid
+                          return null;
                         },
                       ),
                       SizedBox(height: 10),
-                      ElevatedButton(
+                      Obx(() {
+                        return ElevatedButton(
+                          onPressed: () {
+                            if (authController.loginFormKey.currentState!
+                                .validate()) {
+                              authController.login(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              );
+                            }
+                          },
+                          child: authController.isLoginButtonLoading.value
+                              ? SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator())
+                              : Text("Login"),
+                        );
+                      }),
+                      SizedBox(height: 20),
+                      // Sign-up prompt
+                      Text("Don't have an account?"),
+                      TextButton(
                         onPressed: () {
-                          if (authController.loginFormKey.currentState!
-                              .validate()) {
-                            authController.login(
-                              email: emailController.text,
-                              password: passwordController.text,
-                            );
-                          }
+                          Get.to(SignupScreen()); // Navigate to sign-up screen
                         },
-                        child: authController.isLoginButtonLoading.value
-                            ? CircularProgressIndicator()
-                            : Text("Login"),
+                        child: Text("Sign Up"),
                       ),
                     ],
                   ),
