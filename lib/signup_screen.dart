@@ -20,6 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -48,58 +49,29 @@ class _SignupScreenState extends State<SignupScreen> {
                       GlobalTextField(
                         label: "Name",
                         hint: "Enter your name",
-                        controller: usernameController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your name';
-                          }
-                          return null;
-                        },
+                        inputType: InputType.text,
+                        textEditingController: usernameController,
                       ),
                       SizedBox(height: 10),
                       GlobalTextField(
                         label: "Email",
                         hint: "Enter your email",
-                        controller: emailController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                            return 'Please enter a valid email';
-                          }
-                          return null;
-                        },
+                        inputType: InputType.email,
+                        textEditingController: emailController,
                       ),
                       SizedBox(height: 10),
                       GlobalTextField(
                         label: "Password",
                         hint: "Enter your password",
-                        controller: passwordController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
+                        inputType: InputType.password,
+                        textEditingController: passwordController,
                       ),
                       SizedBox(height: 10),
                       GlobalTextField(
                         label: "Confirm Password",
                         hint: "Enter your password again",
-                        controller: confirmPasswordController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please confirm your password';
-                          }
-                          if (value != passwordController.text) {
-                            return 'Passwords do not match';
-                          }
-                          return null;
-                        },
+                        inputType: InputType.password,
+                        textEditingController: confirmPasswordController,
                       ),
                       SizedBox(height: 10),
                       Obx(

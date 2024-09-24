@@ -106,7 +106,7 @@ class AuthController extends GetxController {
         message = 'The email address is already in use by another account.';
         break;
       default:
-        message = 'An unknown error occurred.';
+        message = 'Wrong email or, password provided.';
     }
     showErrorDialog(message);
   }

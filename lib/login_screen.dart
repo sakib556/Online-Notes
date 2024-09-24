@@ -40,31 +40,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       GlobalTextField(
                         label: "Email",
                         hint: "Enter your email",
-                        controller: emailController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                            return 'Please enter a valid email';
-                          }
-                          return null;
-                        },
+                        inputType: InputType.email,
+                        textEditingController: emailController,
                       ),
                       SizedBox(height: 10),
                       GlobalTextField(
                         label: "Password",
                         hint: "Enter your password",
-                        controller: passwordController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
+                        inputType: InputType.password,
+                        textEditingController: passwordController,
                       ),
                       SizedBox(height: 10),
                       Obx(() {
