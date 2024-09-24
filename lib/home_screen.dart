@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_notes/auth_controller.dart';
 import 'package:online_notes/todo_controller.dart';
+import 'package:online_notes/todo_model.dart';
 
 class HomeScreen extends StatelessWidget {
   final TodoController todoController = Get.put(TodoController());
@@ -9,12 +10,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String userId = authController.currentUser!.uid;
-    todoController.fetchTodos(userId); // Fetch todos for the current user
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("My To-Dos"),
+        title: Text("Online Notes"),
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
@@ -26,21 +24,21 @@ class HomeScreen extends StatelessWidget {
         return ListView.builder(
           itemCount: todoController.todos.length,
           itemBuilder: (context, index) {
-            var todo = todoController.todos[index];
+            TodoModel todo = todoController.todos[index];
             return ListTile(
-              title: Text(todo['title']),
-              subtitle: Text(todo['description']),
+              title: Text(todo.title),
+              subtitle: Text(todo.description),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () => _editTodoDialog(
-                        todo['id'], todo['title'], todo['description']),
+                        context, todo.id, todo.title, todo.description),
                   ),
                   IconButton(
                     icon: Icon(Icons.delete),
-                    onPressed: () => todoController.deleteTodo(todo['id']),
+                    onPressed: () => todoController.deleteTodo(todo.id),
                   ),
                 ],
               ),
@@ -49,65 +47,85 @@ class HomeScreen extends StatelessWidget {
         );
       }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _addTodoDialog(),
+        onPressed: () => _addTodoDialog(context),
         child: Icon(Icons.add),
       ),
     );
   }
 
-  _addTodoDialog() {
-    String title = '';
-    String description = '';
+  void _addTodoDialog(BuildContext context) {
+    TextEditingController titleController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+
     Get.defaultDialog(
       title: 'Add To-Do',
       content: Column(
         children: [
           TextField(
-            onChanged: (value) => title = value,
+            controller: titleController,
             decoration: InputDecoration(labelText: 'Title'),
           ),
           TextField(
-            onChanged: (value) => description = value,
+            controller: descriptionController,
             decoration: InputDecoration(labelText: 'Description'),
           ),
         ],
       ),
       textConfirm: 'Add',
       onConfirm: () {
-        todoController.addTodo(
-            authController.currentUser!.uid, title, description);
-        Get.back();
+        if (titleController.text.isNotEmpty &&
+            descriptionController.text.isNotEmpty) {
+          todoController.addTodo(authController.currentUser!.uid,
+              titleController.text, descriptionController.text);
+          // titleController.dispose();
+          // descriptionController.dispose();
+          Get.back();
+        }
       },
       textCancel: 'Cancel',
+      onCancel: () {
+        // titleController.dispose();
+        // descriptionController.dispose();
+      },
     );
   }
 
-  _editTodoDialog(
-      String todoId, String currentTitle, String currentDescription) {
-    String title = currentTitle;
-    String description = currentDescription;
+  void _editTodoDialog(BuildContext context, String todoId, String currentTitle,
+      String currentDescription) {
+    TextEditingController titleController =
+        TextEditingController(text: currentTitle);
+    TextEditingController descriptionController =
+        TextEditingController(text: currentDescription);
+
     Get.defaultDialog(
-      title: 'Edit To-Do',
+      title: 'Edit Note',
       content: Column(
         children: [
           TextField(
-            onChanged: (value) => title = value,
-            decoration:
-                InputDecoration(labelText: 'Title', hintText: currentTitle),
+            controller: titleController,
+            decoration: InputDecoration(
+                labelText: 'Title', hintText: 'Enter new title'),
           ),
           TextField(
-            onChanged: (value) => description = value,
+            controller: descriptionController,
             decoration: InputDecoration(
-                labelText: 'Description', hintText: currentDescription),
+                labelText: 'Description', hintText: 'Enter new description'),
           ),
         ],
       ),
       textConfirm: 'Update',
       onConfirm: () {
-        todoController.updateTodo(todoId, title, description);
+        todoController.updateTodo(
+            todoId, titleController.text, descriptionController.text);
+        // titleController.dispose();
+        // descriptionController.dispose();
         Get.back();
       },
       textCancel: 'Cancel',
+      onCancel: () {
+        // titleController.dispose();
+        // descriptionController.dispose();
+      },
     );
   }
 }

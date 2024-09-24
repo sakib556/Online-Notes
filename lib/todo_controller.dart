@@ -6,6 +6,13 @@ import 'package:online_notes/todo_model.dart';
 
 class TodoController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  @override
+  void onInit() {
+    super.onInit();
+    // Fetch todos for the logged-in user
+    String userId = Get.find<AuthController>().currentUser!.uid;
+    fetchTodos(userId);
+  }
 
   // Observable list of to-do items using the Todo model
   var todos = <TodoModel>[].obs;
