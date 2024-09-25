@@ -4,8 +4,20 @@ import 'package:online_notes/auth_controller.dart';
 import 'package:online_notes/todo_controller.dart';
 import 'package:online_notes/todo_model.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final TodoController todoController = Get.put(TodoController());
+
+  @override
+  void initState() {
+    todoController.fetchTodos();
+    super.initState();
+  }
+
   final AuthController authController = Get.find();
 
   @override

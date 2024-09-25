@@ -6,20 +6,14 @@ import 'package:online_notes/todo_model.dart';
 
 class TodoController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  @override
-  void onInit() {
-    super.onInit();
-    // Fetch todos for the logged-in user
-    String userId = Get.find<AuthController>().currentUser!.uid;
-    fetchTodos(userId);
-  }
 
   // Observable list of to-do items using the Todo model
   var todos = <TodoModel>[].obs;
 
   // Fetch user's To-Dos from Firestore and store them as Todo models
-  void fetchTodos(String userId) async {
+  void fetchTodos() async {
     try {
+      String userId = Get.find<AuthController>().currentUser!.uid;
       var result = await firestore
           .collection('todos')
           .where('userId', isEqualTo: userId)
@@ -41,7 +35,7 @@ class TodoController extends GetxController {
         'title': title,
         'description': description,
       });
-      fetchTodos(userId);
+      fetchTodos();
     } catch (e) {
       Get.snackbar("Error", "Failed to add todo: $e",
           backgroundColor: Colors.red, colorText: Colors.white);
@@ -56,7 +50,7 @@ class TodoController extends GetxController {
         'title': title,
         'description': description,
       });
-      fetchTodos(Get.find<AuthController>().currentUser!.uid);
+      fetchTodos();
     } catch (e) {
       Get.snackbar("Error", "Failed to update todo: $e",
           backgroundColor: Colors.red, colorText: Colors.white);
@@ -67,7 +61,7 @@ class TodoController extends GetxController {
   Future<void> deleteTodo(String todoId) async {
     try {
       await firestore.collection('todos').doc(todoId).delete();
-      fetchTodos(Get.find<AuthController>().currentUser!.uid);
+      fetchTodos();
     } catch (e) {
       Get.snackbar("Error", "Failed to delete todo: $e",
           backgroundColor: Colors.red, colorText: Colors.white);
